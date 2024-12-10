@@ -12,52 +12,55 @@ def getInput():
     return fileInput.split("\n")
 
 
+# reduce the numbers to their difference values.
+def parseDifference(input):
+    output = []
+    for sequence in input:
+        aux = []
+        sequence = sequence.split(" ")
+        for i in range(0, len(sequence) -1):
+            diff = int(sequence[i+1]) - int(sequence[i]) 
+            aux.append(diff)
+        output.append(aux)
+    return output
+    
+def isSafe(sequence):
+    dampner = 0 # default first start problem
+    signal = "+"
+    if sequence[0] < 0:
+        signal = "-"
+        
+    for n in sequence:
+        if ( abs(n) > 3 or abs(n) < 1 ):
+            dampner = dampner - 1
+            
+        if( (n > 0 and signal == "-") or (n < 0 and signal == "+")  ):
+            dampner = dampner -1
+        
+        if (dampner < 0):
+            return False
+            break
+    #
+
+    return True
+    
+
 def main():
     results = {
         "safe" : 0,
         "unsafe" : 0
     }
-    input = getInput()
     
-    for r in input:
-        sucess = True
-        sequence = r.split(" ")
-        
-        
-        for i in range(1,len(sequence) -1): 
-            
-            prevDiff = int(sequence[i-1]) - int(sequence[i])
-            currDiff = int(sequence[i]) - int(sequence[i+1])
-            #
-            # Check if the ammount that changed is greater than the allowed (3)
-            if (abs(prevDiff) > 3 or abs(currDiff) > 3):
-                sucess = False
-                print("Broke rule 1")
-                results["unsafe"] += 1
-                break
-            #
-            # Checks if they have the same path (are both increasing or decreasing)
-            if ( (prevDiff > 0) != (currDiff > 0) ):
-                sucess = False
-                print("Broke rule 2")
-                results["unsafe"] += 1
-                break
-            #
-            # Check if any of then is 0
-            if (prevDiff == 0 or currDiff == 0):
-                sucess = False
-                print("Broke rule 3")
-                results["unsafe"] += 1
-                break
-            
-            
-        #
-        if (sucess):
+    input = parseDifference(getInput())
+    
+    for sequence in input:
+        if isSafe(sequence):
             results["safe"] += 1
-        
-        print(f" {r} => {sucess}  | { results }")
-
-    #
+        else:
+            results["unsafe"] += 1
+    
     print(results)
-    pass
+    
+    return
+    
 main()
