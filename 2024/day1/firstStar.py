@@ -5,8 +5,6 @@
 #
 
 from pathlib import Path
-import os
-
 
 # fetch the input from the file
 def getInput():
